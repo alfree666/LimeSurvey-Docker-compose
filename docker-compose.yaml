@@ -1,0 +1,31 @@
+version: '2'
+
+services:
+
+  limesurvey-db:
+    image: mariadb:10.6
+    restart: unless-stopped
+    ports:
+      - "8100:3306"
+    environment:
+      MYSQL_DATABASE: limesurvey
+      MYSQL_ROOT_PASSWORD: p4ssw0rd
+      MYSQL_USER: Admin
+      MYSQL_PASSWORD: p4ssw0rd
+    volumes:
+      - ./limesurvey-db:/var/lib/mysql
+      - ./limesurvey-dblog:/var/log/mysql
+      - ./limeservey-dbetc:/etc/mysql
+
+  limesurvey:
+    image: fjudith/limesurvey:2.73.0
+    restart: unless-stopped
+    ports:
+      - "8200:80"  
+    volumes:
+      - ./plugins:/var/www/html/plugins
+      - ./upload:/var/www/html/upload  
+    links:
+      - limesurvey-db:mysql
+
+      
